@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <!-- With the routerLinkActive, we are setting up the CSS class name we want to use to style the active link. 
+          Furthermore, the routerLinkActiveOptions is going to allow us to add a class only if there is an exact match of the link and the URL.
+           Lastly, we are not using the href attribute anymore for navigation.
+            Instead, we are using the [routerLink] directive to navigate to our routing path. -->
+        <a
+          class="navbar-brand"
+          [routerLink]="['/home']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Account-Owner Home</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse"
+          id="collapseNav"
+          [collapse]="!isCollapsed"
+          [isAnimated]="true"
+        >
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Owner Actions </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Account Actions </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
