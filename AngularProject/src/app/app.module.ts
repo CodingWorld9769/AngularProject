@@ -8,6 +8,7 @@ import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { HttpClientModule } from '@angular/common/http';
+import { OwnerModule } from './owner/owner.module';
 @NgModule({
   declarations: [AppComponent, HomeComponent, MenuComponent, NotFoundComponent],
   imports: [
@@ -17,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule,
     CollapseModule.forRoot(),
+    OwnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
