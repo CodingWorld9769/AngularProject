@@ -1,38 +1,36 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Owner } from 'src/app/_interfaces/owner.model';
 import { ErrorHandlerService } from 'src/app/shared/service/error-handler.service';
 import { OwnerRepositoryService } from 'src/app/shared/service/owner-repository.service';
-import { Router } from '@angular/router';
+
 @Component({
-  selector: 'app-owner-list',
-  templateUrl: './owner-list.component.html',
-  styleUrls: ['./owner-list.component.css'],
+  selector: 'app-owner-details',
+  templateUrl: './owner-details.component.html',
+  styleUrls: ['./owner-details.component.css'],
 })
-export class OwnerListComponent implements OnInit {
-  owners: Owner[] = [];
+export class OwnerDetailsComponent implements OnInit {
+  owner!: Owner;
   errorMessage: string = '';
   constructor(
     private repository: OwnerRepositoryService, //service one to call the interfaces for CRUD operation
     private errorHandler: ErrorHandlerService, //Service two for calling erroe handle component
-    private router: Router
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.getAllOwners();
+    this.getOwnerDetails();
   }
 
-  public getOwnerDetails = (id: string) => {
-    const detailsUrl: string = `/owner/details/${id}`;
-    this.router.navigate([detailsUrl]);
-  };
+  public getOwnerDetails = () => {
+    const id: string = this.activeRoute.snapshot.params['id'];
+    const apiUrl: string = `api/owner/$(id)/account`;
 
-  private getAllOwners = () => {
-    const apiAddress: string = 'api/owner';
-    this.repository.getOwners(apiAddress).subscribe({
-      next: (own: Owner[]) => (this.owners = own), // next property will trigger if the response is successfull
+    this.repository.getOwner(apiUrl).subscribe({
+      next: (own: Owner) => (this.owner = own),
       error: (err: HttpErrorResponse) => {
-        // error property will handle the error response
         this.errorHandler.handleError(err);
         this.errorMessage = this.errorHandler.errorMessage;
       },

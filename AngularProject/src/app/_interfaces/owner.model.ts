@@ -1,6 +1,9 @@
+import { Account } from '../_interfaceAccount/owner.account';
+
 export interface Owner {
   id: string;
   name: string;
   dateOfBirth: Date;
-  address: String;
+  address: string;
+  accounts?: Account[];
 }

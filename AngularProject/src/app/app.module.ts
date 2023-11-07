@@ -9,8 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { HttpClientModule } from '@angular/common/http';
 import { OwnerModule } from './owner/owner.module';
+import { InternalServerComponent } from './error-pages/internal-server/internal-server.component';
 @NgModule({
-  declarations: [AppComponent, HomeComponent, MenuComponent, NotFoundComponent],
+  declarations: [AppComponent, HomeComponent, MenuComponent, NotFoundComponent, InternalServerComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

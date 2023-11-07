@@ -44,6 +44,11 @@ export class OwnerRepositoryService {
     return `${envAddress}/${route}`;
   };
 
+  public getOwner = (route: string) => {
+    return this.http.get<Owner>(
+      this.createCompleteRoute(route, this.envUrl.urlAddress)
+    );
+  };
   private generateHeaders = () => {
     return {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
