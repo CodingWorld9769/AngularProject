@@ -1,0 +1,72 @@
+<div class="container my-5">
+  <div class="md-3">
+    <div class="row">
+      <div class="col-6">
+        <form #form="ngForm" (ngSubmit)="addStudent()">
+          <div class="mb-3">
+            <label for="Student ID" class="form-label">Student ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Student ID"
+              name="StudentID"
+              [(ngModel)]="addStudentRequest.id"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">FirstName</label>
+            <input
+              type="text"
+              class="form-control"
+              id="FirstName"
+              name="firstName"
+              [(ngModel)]="addStudentRequest.firstName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">LastName</label>
+            <input
+              type="text"
+              class="form-control"
+              id="LastName"
+              name="lastName"
+              [(ngModel)]="addStudentRequest.lastName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="Major" class="form-label">Major</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Major"
+              name="major"
+              [(ngModel)]="addStudentRequest.major"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="Gender" class="form-label">Gender</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Gender"
+              name="gend"
+              [(ngModel)]="addStudentRequest.gend"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="DOB" class="form-label">Date of birth</label>
+            <input
+              type="date"
+              class="form-control"
+              id="DOB"
+              name="dob"
+              [(ngModel)]="addStudentRequest.dob"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

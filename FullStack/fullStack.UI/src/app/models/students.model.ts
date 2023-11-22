@@ -4,5 +4,5 @@ export interface Student {
   lastName: string;
   major: string;
   gend: string;
-  dob: string;
+  dob: Date;
 }
