@@ -5,7 +5,8 @@
     <thead>
       <tr>
         <th>Id</th>
-        <th>Name</th>
+        <th>FirstName</th>
+        <th>LastName</th>
         <th>Major</th>
         <th>Gender</th>
         <th>DOB</th>
@@ -14,10 +15,11 @@
     <tbody>
       <tr *ngFor="let student of students">
         <td>{{ student.id }}</td>
-        <td>{{ student.name }}</td>
+        <td>{{ student.firstName }}</td>
+        <td>{{ student.lastName }}</td>
         <td>{{ student.major }}</td>
-        <td>{{ student.gender }}</td>
-        <td>{{ student.DOB }}</td>
+        <td>{{ student.gend }}</td>
+        <td>{{ student.dob | date : "short" }}</td>
       </tr>
     </tbody>
   </table>

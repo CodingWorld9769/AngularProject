@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Student } from '../models/students.model';
+import { HttpClient } from '@angular/common/http';
+import { StudentsService } from '../services/students.service';
 
 @Component({
   selector: 'app-students-list',
@@ -8,26 +10,20 @@ import { Student } from '../models/students.model';
 })
 export class StudentsListComponent implements OnInit {
   //creating a static list
-  students: Student[] = [
-    {
-      id: 'SO1',
-      name: 'john Doe',
-      major: 'MIS',
-      gender: 'F',
-      DOB: '12/2/2023',
-    },
-    {
-      id: 'SO2',
-      name: 'Sameer saini',
-      major: 'Acct',
-      gender: 'M',
-      DOB: '1/12/2022',
-    },
-  ];
+  students: Student[] = [];
 
-  constructor() {}
+  constructor(private studentService: StudentsService) {}
 
   ngOnInit(): void {
     //display the data when student tab is hit
+    this.studentService.getAllStudents().subscribe({
+      next: (students) => {
+        console.log(students);
+        this.students = students;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
   }
 }
