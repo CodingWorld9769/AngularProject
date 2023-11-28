@@ -10,6 +10,7 @@
         <th>Major</th>
         <th>Gender</th>
         <th>DOB</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -20,8 +21,10 @@
         <td>{{ student.major }}</td>
         <td>{{ student.gend }}</td>
         <td>{{ student.dob | date : "MM - dd - yyyy" }}</td>
+        <td><a [routerLink]="['/students', 'edit', student.id]">View</a></td>
       </tr>
     </tbody>
   </table>
+
   <p *ngIf="!students || students.length <= 0">No Students Found!!</p>
 </div>

@@ -23,4 +23,26 @@ export class StudentsService {
       `${this.baseApiUrl}/api/SchoolManagement/GetStudent`
     );
   }
+
+  getEmployee(id: string): Observable<Student> {
+    return this.http.get<Student>(
+      this.baseApiUrl + '/api/SchoolManagement/GetStudent/' + id
+    );
+  }
+
+  updateStudent(
+    id: string,
+    updateStudentRequest: Student
+  ): Observable<Student> {
+    return this.http.put<Student>(
+      this.baseApiUrl + '/api/SchoolManagement/PutStudent/' + id,
+      updateStudentRequest
+    );
+  }
+
+  deleteStudent(id: string): Observable<Student> {
+    return this.http.delete<Student>(
+      this.baseApiUrl + '/api/SchoolManagement/DeleteStudent/' + id
+    );
+  }
 }

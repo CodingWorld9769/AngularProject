@@ -1,0 +1,80 @@
+<div class="container my-5">
+  <div class="md-3">
+    <div class="row">
+      <div class="col-6">
+        <form #form="ngForm" (ngSubmit)="updateStudent()">
+          <div class="mb-3">
+            <label for="Student ID" class="form-label">Student ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Student ID"
+              name="StudentID"
+              [(ngModel)]="studentDetails.id"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">FirstName</label>
+            <input
+              type="text"
+              class="form-control"
+              id="FirstName"
+              name="firstName"
+              [(ngModel)]="studentDetails.firstName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">LastName</label>
+            <input
+              type="text"
+              class="form-control"
+              id="LastName"
+              name="lastName"
+              [(ngModel)]="studentDetails.lastName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="Major" class="form-label">Major</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Major"
+              name="major"
+              [(ngModel)]="studentDetails.major"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="Gender" class="form-label">Gender</label>
+            <input
+              type="text"
+              class="form-control"
+              id="Gender"
+              name="gend"
+              [(ngModel)]="studentDetails.gend"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="DOB" class="form-label">Date of birth</label>
+            <input
+              type="date"
+              class="form-control"
+              id="DOB"
+              name="dob"
+              [(ngModel)]="studentDetails.dob"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update</button>
+
+          <button
+            type="delete"
+            class="btn btn-danger"
+            (click)="deleteStudent(studentDetails.id)"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
