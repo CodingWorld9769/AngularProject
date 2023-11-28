@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Owner } from 'src/app/_interfaces/owner.model';
-import { ErrorHandlerService } from 'src/app/shared/service/error-handler.service';
-import { OwnerRepositoryService } from 'src/app/shared/service/owner-repository.service';
+
 import { Router } from '@angular/router';
+import { OwnerRepositoryService } from 'src/app/shared/services/owner-repository.service';
+import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 @Component({
   selector: 'app-owner-list',
   templateUrl: './owner-list.component.html',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class OwnerListComponent implements OnInit {
   owners: Owner[] = [];
+  wf: any;
   errorMessage: string = '';
   constructor(
     private repository: OwnerRepositoryService, //service one to call the interfaces for CRUD operation
@@ -30,7 +32,11 @@ export class OwnerListComponent implements OnInit {
   private getAllOwners = () => {
     const apiAddress: string = 'api/owner';
     this.repository.getOwners(apiAddress).subscribe({
-      next: (own: Owner[]) => (this.owners = own), // next property will trigger if the response is successfull
+      next: (own: any) => {
+        console.log('---------', own);
+        this.wf = own;
+      }, // next property will trigger if the response is successfull
+
       error: (err: HttpErrorResponse) => {
         // error property will handle the error response
         this.errorHandler.handleError(err);
