@@ -29,7 +29,9 @@ export class AddStudentComponent implements OnInit {
     //console.log(this.addStudentRequest);
     this.studentService.addStudents(this.addStudentRequest).subscribe({
       next: (student) => {
-        this.router.navigate(['students']);
+        console.log(student);
+
+        this.router.navigate(['./students']);
       },
     });
   }

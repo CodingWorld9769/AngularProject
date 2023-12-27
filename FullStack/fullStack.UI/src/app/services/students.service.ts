@@ -13,7 +13,7 @@ export class StudentsService {
   constructor(private http: HttpClient) {}
 
   addStudents(addStudentRequest: Student): Observable<Student> {
-    return this.http.post<Student>(
+    return this.http.post<any>(
       this.baseApiUrl + '/api/SchoolManagement/AddStudent',
       addStudentRequest
     );
@@ -41,7 +41,7 @@ export class StudentsService {
   }
 
   deleteStudent(id: string): Observable<Student> {
-    return this.http.delete<Student>(
+    return this.http.delete<any>(
       this.baseApiUrl + '/api/SchoolManagement/DeleteStudent/' + id
     );
   }
