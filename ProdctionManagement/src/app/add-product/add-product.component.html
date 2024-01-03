@@ -1,0 +1,67 @@
+<!-- product-form.component.html -->
+
+<form #form="ngForm" (ngSubmit)="OnSubmit()">
+  <div class="form-group">
+    <label for="productName">Product Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="productName"
+      name="productName"
+      [(ngModel)]="addProduct.productName"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="category">Category</label>
+    <select
+      class="form-control"
+      id="category"
+      name="category"
+      [(ngModel)]="addProduct.category"
+    >
+      <option [ngValue]="0">Electronics</option>
+      <option [ngValue]="1">Clothing</option>
+      <option [ngValue]="2">Furniture</option>
+      <option [ngValue]="3">Books</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="price"
+      name="price"
+      [(ngModel)]="addProduct.price"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="isAvailable">Is Available</label>
+    <input
+      type="checkbox"
+      class="form-check-input"
+      id="isAvailable"
+      name="isAvailable"
+      [(ngModel)]="addProduct.isAvailable"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="quantity">Quantity</label>
+    <input
+      type="number"
+      class="form-control"
+      id="quantity"
+      name="quantity"
+      [(ngModel)]="addProduct.quantity"
+    />
+  </div>
+
+  <!-- Add more fields as needed -->
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

@@ -1,0 +1,22 @@
+<!-- orders-form.component.html -->
+<form [formGroup]="ordersForm" (ngSubmit)="onSubmit()">
+  <label for="customerName">Customer Name:</label>
+  <input type="text" id="customerName" formControlName="customerName" />
+
+  <label for="orderDate">Order Date:</label>
+  <input type="date" id="orderDate" formControlName="orderDate" />
+
+  <label for="quantity">Quantity:</label>
+  <input type="number" id="quantity" formControlName="quantity" />
+
+  <label for="productId">Product:</label>
+  <select id="productId" formControlName="productId">
+    @for(product of products; track product){
+    <option [value]="product.productId">
+      {{ product.productName }}
+    </option>
+    }
+  </select>
+
+  <button type="submit" [disabled]="!ordersForm.valid">Place Order</button>
+</form>

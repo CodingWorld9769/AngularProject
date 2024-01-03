@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <!-- ... (your table header) ... -->
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Product name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of listOfProduct; track product) {
+          <tr></tr>
+          <tr>
+            <td>{{ product.productId }}</td>
+            <td>{{ product.productName }}</td>
+            <td>{{ mapCategoryFromValue(product.category) }}</td>
+            <!-- Fix typo: 'cateory' to 'category' -->
+            <td>{{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.isAvailable }}</td>
+            <!-- ... (your table cells) ... -->
+            <button
+              type="button"
+              class="btn btn-info"
+              [routerLink]="'/Product/EditProduct/' + product.productId"
+            >
+              Edit
+            </button>
+            <button (click)="deleteProduct(product.productId)">Delete</button>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <button
+        type="button"
+        class="btn btn-primary btn-block"
+        routerLink="/AddProduct"
+      >
+        Add Product
+      </button>
+    </div>
+  </div>
+</div>

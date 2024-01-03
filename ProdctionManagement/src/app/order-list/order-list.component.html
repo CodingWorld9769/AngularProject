@@ -1,0 +1,33 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Customer Name</th>
+      <th scope="col">Order Date</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Product Id</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (order of listOfOrder; track order){
+    <tr>
+      <td>{{ order.orderId }}</td>
+      <td>{{ order.customerName }}</td>
+      <td>{{ order.orderDate }}</td>
+      <td>{{ order.quantity }}</td>
+      <td>{{ order.productId }}</td>
+      <button
+        type="button"
+        class="btn btn-info"
+        [routerLink]="'/Order/EditOrder/' + order.orderId"
+      >
+        Edit
+      </button>
+      <button (click)="deleteOrder(order.orderId)">Delete</button>
+    </tr>
+
+    }
+  </tbody>
+</table>
+
+<button class="btn btn-primary" routerLink="/AddOrder">Order</button>
