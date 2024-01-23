@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -5,12 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, HttpClientModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
@@ -20,7 +22,14 @@ export class SignupComponent implements OnInit {
   eyeIcon: string = 'fa-eye-slash';
 
   signUpForm!: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  //injecting services
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {}
+
+  //form validation
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -30,15 +39,28 @@ export class SignupComponent implements OnInit {
       password: ['', Validators.required],
     });
   }
+  //eyes open and close logic
   hideAndShowPass() {
     this.istext = !this.istext;
     this.istext ? (this.eyeIcon = 'fa-eye') : (this.eyeIcon = 'fa-eye-slash');
     this.istext ? (this.type = 'text') : (this.type = 'password');
   }
 
+  //Logic for signUp
   onSubmit() {
     if (this.signUpForm.valid) {
-      console.log(this.signUpForm.value);
+      this.auth.signUp(this.signUpForm.value).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.signUpForm.reset();
+          this.router.navigate(['login']);
+        },
+        error: (err) => {
+          alert(err?.error.message);
+        },
+      });
+    } else {
+      //throw error
     }
   }
 }
