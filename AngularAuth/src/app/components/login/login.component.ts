@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
         next: (res) => {
           alert(res.message);
           this.loginForm.reset();
+          this.auth.storeToken(res.token); //it will store the token when login is successful
           this.router.navigate(['dashboard']);
         },
         error: (err) => {
