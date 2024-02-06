@@ -1,30 +1,33 @@
-// Protects the routing
-
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-  CanActivate,
+  CanActivateFn,
+  Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router,
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { NgToastService } from 'ng-angular-popup';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) {}
+export const authGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const service = inject(AuthService);
+  const router = inject(Router);
+  const toastr = inject(NgToastService);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    if (this.authService.isLoggedIn()) {
-      return true;
-    } else {
-      // Redirect to the login page or another route if not logged in
-      this.router.navigate(['/login']);
-      return false;
-    }
+  if (service.isLoggedIn()) {
+    console.log('Logged in!');
+    //it goes into infinte loop
+    //router.navigate(['dashboard']);
+    return true;
+  } else {
+    toastr.error({
+      detail: 'Error',
+      summary: 'please login first!!',
+      duration: 5000,
+    });
+    router.navigate(['login']);
+    return false;
   }
-}
+};

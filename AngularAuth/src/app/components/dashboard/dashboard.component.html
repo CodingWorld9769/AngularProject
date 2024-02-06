@@ -1,1 +1,13 @@
-<p>dashboard works!</p>
+<h1>Hello Dashboard</h1>
+<!-- <ul>
+  @for (user of users; track user.id) {
+  <li>{{ user.username }}</li>
+  }
+</ul> -->
+
+<ul *ngFor="let user of users">
+  <li>{{ user.username }}</li>
+</ul>
+
+
+<button class="btn btn-danger" (click)="logout()">Logout</button>
