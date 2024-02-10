@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { IndividualConfig, ToastrModule, ToastrService } from 'ngx-toastr';
 import { NgToastModule, NgToastService } from 'ng-angular-popup';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toastr: NgToastService
+    private toastr: NgToastService,
+    private userStore: UserStoreService
   ) {}
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -48,7 +50,12 @@ export class LoginComponent implements OnInit {
       this.auth.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.loginForm.reset();
-          this.auth.storeToken(res.token); //it will store the token when login is successful
+          this.auth.storeToken(res.accessToken); //it will store the token when login is successful
+          this.auth.storeRefreshToken(res.refreshToken); // storing the refresh token
+
+          const tokenPayload = this.auth.decodedToken();
+          this.userStore.setFullNameForStore(tokenPayload.name); //set the fullname
+          this.userStore.setRoleForStore(tokenPayload.role); // set the role of the user
 
           this.toastr.success({
             detail: 'Success',
