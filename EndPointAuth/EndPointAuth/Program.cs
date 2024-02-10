@@ -47,6 +47,7 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysceret.....")),
         ValidateAudience = false,
         ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero //to make it exact time for token expiry
     };
 });
 
@@ -66,7 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("MyPolicy");
-app.UseAuthentication();
+app.UseAuthentication(); //pipline where we register our authenication and aurization
 app.UseAuthorization();
 
 app.MapControllers();

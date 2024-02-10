@@ -9,6 +9,10 @@ using System.Text.RegularExpressions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using EndPointAuth.Models.Dto;
 
 namespace EndPointAuth.Controllers
 {
@@ -47,10 +51,15 @@ namespace EndPointAuth.Controllers
             }
 
             user.Token = CreateJwt(user);
-            return Ok(new
+            var newAccessToken = user.Token;
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshToken = newRefreshToken; //as we want to save teh refreshtoken value into data base
+            await _authContext.SaveChangesAsync();
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+            return Ok( new TokenApiDtocs()
             {
-                Token=user.Token,
-                Message = "Login Success!"
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
             });
         }
 
@@ -82,7 +91,7 @@ namespace EndPointAuth.Controllers
 
 
             userObj.Password = PasswordHasher.HashPassword(userObj.Password);
-            userObj.Role = "User";
+            userObj.Role = "";
             userObj.Token = "";
             await _authContext.Users.AddAsync(userObj);
             await _authContext.SaveChangesAsync();
@@ -137,7 +146,7 @@ namespace EndPointAuth.Controllers
             var identity = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+                new Claim(ClaimTypes.Name, $"{user.Username}")
             });
             //key is in bytes
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
@@ -152,11 +161,94 @@ namespace EndPointAuth.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
+        //getprijncipal from expire token this method is going to give the payload data to check the access token(expire token) user is sending is valid or not
+        private ClaimsPrincipal GetPrincipleFromExpiredToken(string token)
+        {
+            var key = Encoding.ASCII.GetBytes("veryverysceret.....");
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true, // if iot macth then the toekn is valid
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = false,
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principle = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+               throw new SecurityTokenException("this is invalid token");
+            }
+            return principle;
+            
+        }
+
+
+
+
+
+
+
+
+        //method for refreshtoken
+        private string CreateRefreshToken()
+        {
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var refreshToken = Convert.ToBase64String(tokenBytes);
+
+            //check the token is there in user
+            var tokenInUser =  _authContext.Users.Any(a => a.RefreshToken == refreshToken);
+
+            if(tokenInUser)
+            {
+                return CreateRefreshToken();
+            }
+
+            return refreshToken;
+
+        }
+
+        [Authorize]
         [HttpGet("GetUsers")]
         public async Task<ActionResult<User>> Getusers()
         {
             return Ok(await _authContext.Users.ToListAsync());
         }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenApiDtocs tokenApiDtocs)
+        {
+            if(tokenApiDtocs is null)
+            {
+                return BadRequest("inavlid Client Request");
+
+            }
+            string accessToken = tokenApiDtocs.AccessToken;
+            string refreshToken = tokenApiDtocs.RefreshToken;   
+            var principle = GetPrincipleFromExpiredToken(accessToken);
+            var username = principle.Identity.Name; //taking this from priciple
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Username == username);
+            if(user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest("Inavlid request");
+                
+
+            }
+            var newAccessToken = CreateJwt(user);
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            await _authContext.SaveChangesAsync();
+            return Ok(new TokenApiDtocs()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+            });
+        }
+
             
 
     }
