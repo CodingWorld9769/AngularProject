@@ -1,4 +1,5 @@
 using EndPointAuth.Context;
+using EndPointAuth.UtilityService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +53,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 
-
+builder.Services.AddScoped<IEmailService, EmailService>(); //dependency injection
 
 
 

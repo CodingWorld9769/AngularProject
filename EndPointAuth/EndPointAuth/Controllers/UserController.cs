@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using EndPointAuth.Models.Dto;
+using EndPointAuth.UtilityService;
 
 namespace EndPointAuth.Controllers
 {
@@ -22,9 +23,13 @@ namespace EndPointAuth.Controllers
     public class UserController : Controller
     {
         public readonly AppDbContext _authContext;
-        public UserController(AppDbContext appDbContext)
+        public readonly IConfiguration _Confirguration;
+        private readonly IEmailService _emailService;
+        public UserController(AppDbContext appDbContext, IConfiguration configuration, IEmailService emailService)
         {
             _authContext = appDbContext;
+            _Confirguration = configuration;
+            _emailService = emailService; // what type of dependancy injection add trasient, add scope,
             
         }
 
@@ -189,10 +194,6 @@ namespace EndPointAuth.Controllers
 
 
 
-
-
-
-
         //method for refreshtoken
         private string CreateRefreshToken()
         {
@@ -249,7 +250,69 @@ namespace EndPointAuth.Controllers
             });
         }
 
-            
+        [HttpPost("send-reset-email/{email}")]
+        public async Task<IActionResult>SendEmail(string email)
+        {
+            var user = await _authContext.Users.FirstOrDefaultAsync(a => a.Email == email);
+            if(user is null)
+            {
+                return NotFound(new
+                {
+                    StaticCode = 404,
+                    Mesage = "Email Does not exist"
+                });
 
+            }
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var emailToken = Convert.ToBase64String(tokenBytes);
+            user.ResetPasswordToken = emailToken;
+            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
+            string from = _Confirguration["EmailSettings:From"];
+            var emailModel = new EmailModel(email, "reset password", EmailBody.EmailStringBody(email , emailToken));
+             _emailService.SendEmail(emailModel);
+;
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "EmailSend!"
+            });
+        }
+
+        //Api to reset the email
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
+            var user = await _authContext.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
+            if (user is null)
+            {
+                return NotFound(new
+                {
+                    StaticCode = 404,
+                    Mesage = "user Doesn't exist"
+                });
+
+            }
+            var tokenCode = user.ResetPasswordToken;
+            DateTime emailTokenExpiry = user.ResetPasswordExpiry;
+            if(tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "Invalid Reset Link"
+                });
+            }
+            user.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
+            _authContext.Entry(user).State = EntityState.Modified;
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "password reset succefully!"
+            });
+        }
     }
 }
