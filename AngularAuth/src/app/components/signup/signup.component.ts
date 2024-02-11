@@ -8,11 +8,18 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, HttpClientModule, RouterModule],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    CommonModule,
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })

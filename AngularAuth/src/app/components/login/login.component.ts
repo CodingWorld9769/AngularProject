@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
+  NgModel,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -11,11 +13,19 @@ import { AuthService } from '../../services/auth.service';
 import { IndividualConfig, ToastrModule, ToastrService } from 'ngx-toastr';
 import { NgToastModule, NgToastService } from 'ng-angular-popup';
 import { UserStoreService } from '../../services/user-store.service';
+import { CommonModule } from '@angular/common';
+import { ResetPasswordService } from '../../services/reset-password.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, HttpClientModule, NgToastModule],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgToastModule,
+    FormsModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -26,12 +36,16 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
 
+  public resetPasswordEmail: string = '';
+  public isValidEmail!: boolean;
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
     private toastr: NgToastService,
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private resetPasswordService: ResetPasswordService
   ) {}
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -78,6 +92,44 @@ export class LoginComponent implements OnInit {
       });
     } else {
       //throw error
+    }
+  }
+
+  checkValidEmail(event: string) {
+    const value = event;
+    //rejex pattern to check email
+    const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;
+    this.isValidEmail = pattern.test(value);
+    return this.isValidEmail;
+  }
+
+  confirmToSend() {
+    if (this.checkValidEmail(this.resetPasswordEmail)) {
+      console.log(this.resetPasswordEmail);
+
+      //API call to be done
+
+      this.resetPasswordService
+        .sendResetPasswordLink(this.resetPasswordEmail)
+        .subscribe({
+          next: (res) => {
+            this.toastr.success({
+              detail: 'Success',
+              summary: 'Reset Done',
+              duration: 3000,
+            });
+            this.resetPasswordEmail = '';
+            const buttonRef = document.getElementById('closBtn');
+            buttonRef?.click(); // form will be closed when close button is hit
+          },
+          error: (err) => {
+            this.toastr.error({
+              detail: 'Error',
+              summary: 'Something went wrong',
+              duration: 5000,
+            });
+          },
+        });
     }
   }
 }
