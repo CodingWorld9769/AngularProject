@@ -5,34 +5,36 @@ import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { UserStoreService } from '../../services/user-store.service';
+import { Seller } from '../../models/Seller.model';
+import { NgToastModule, NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HttpClientModule, RouterModule, CommonModule],
+  imports: [HttpClientModule, RouterModule, CommonModule, NgToastModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  /**
-   *
-   */
-  public users: any = [];
+  ListOfSeller: Seller[] = [];
   public fullName: string = '';
   public role: string = '';
+  brandName: string = 'Productify';
 
   constructor(
     private auth: AuthService,
 
     private apiService: ApiService,
 
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private router: Router,
+    private toastr: NgToastService
   ) {}
 
   ngOnInit(): void {
     //console.log("i'm in dashboard ngonit", localStorage.getItem('token'));
-    this.apiService.getUser().subscribe((res) => {
-      this.users = res;
+    this.apiService.getSeller().subscribe((res) => {
+      this.ListOfSeller = res;
     });
 
     //initialing the service here
@@ -50,6 +52,31 @@ export class DashboardComponent implements OnInit {
       this.role = role || roleFromToken;
     });
   }
+
+  onDelete(id: number) {
+    this.apiService.deleteSeller(id).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.toastr.success({
+          detail: 'Success',
+          summary: 'Seller deleted successfully',
+          duration: 5000,
+        });
+        this.router.navigate(['dashboard']);
+      },
+      error: (err) => {
+        this.toastr.error({
+          detail: 'Error',
+          summary: 'Something went wrong',
+          duration: 5000,
+        });
+        console.log(err);
+        //this.toastr.warning('Login failed');
+      },
+    });
+  }
+
+  
 
   logout() {
     this.auth.signOut();

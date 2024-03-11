@@ -1,0 +1,91 @@
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">
+    welcome to
+    <h2>{{ brandName }}</h2>
+  </a>
+  <button
+    class="navbar-toggler position-absolute d-md-none collapsed"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#sidebarMenu"
+    aria-controls="sidebarMenu"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <input
+    class="form-control form-control-dark w-100 rounded-0 border-0"
+    type="text"
+    placeholder="Search"
+    aria-label="Search"
+  />
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a
+        style="background: red; color: #fff; border-radius: 4px; margin: 10px"
+        class="nav-link px-3 cursor-pointer"
+        (click)="logout()"
+        >Sign out</a
+      >
+    </div>
+  </div>
+</header>
+
+<!-- <div class="container">
+  <div class="row">
+    <div
+      class="col-md-4 mb-4"
+      *ngFor="let product of listOfProduct"
+      (click)="onProductClicked(product)"
+    >
+      <div class="card">
+        <img
+          [src]="product.imageUrl"
+          class="card-img-top"
+          alt="Product Image"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ product.productName }}</h5>
+          <p class="card-text">{{ product.productDescription }}</p>
+          <p class="card-text">Price: {{ product.price }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="product-list-wrapper">
+  <h1>Trendy Products</h1>
+  <div class="row">
+    <div class="col-sm-3" *ngFor="let product of listOfProduct" (click)="onProductClicked(product)">
+      <div class="product-item">
+        <img src="{{product.imageUrl}}" alt="">
+      <div class="product-details">
+        <h6 class="name-head">{{product.productName}}</h6>
+        
+        <div class="product-price">
+          <h6>Price: {{product.price}} $</h6>
+        </div>
+        
+      </div>
+      <div class="product-footer">
+     
+      <Button class="btn btn-primary">Add to Cart</Button>  
+      @if(role == 'Admin'){
+        <button class="btn btn-secondary" routerLink="/EditProduct">Edit Product</button>
+        }
+
+  
+      </div>
+      </div>
+    </div> 
+  
+  
+  </div>
+  </div>
+
+
+@if(role == 'Admin'){
+<button class="btn btn-secondary" routerLink="/addProduct">Add Product</button>
+
+}

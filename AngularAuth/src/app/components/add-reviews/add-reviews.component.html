@@ -1,0 +1,58 @@
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#"
+      >Welcome to
+      <h3>{{ brandName }}</h3></a
+    >
+    <button
+      class="navbar-toggler position-absolute d-md-none collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu"
+      aria-controls="sidebarMenu"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <input
+      class="form-control form-control-dark w-100 rounded-0 border-0"
+      type="text"
+      placeholder="Search"
+      aria-label="Search"
+    />
+    <div class="navbar-nav">
+      <div class="nav-item text-nowrap">
+        <a
+          style="background: red; color: #fff; border-radius: 4px; margin: 10px"
+          class="nav-link px-3 cursor-pointer"
+          (click)="logout()"
+          >Sign out</a
+        >
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <form [formGroup]="AddReviewForm" (ngSubmit)="onSubmit()">
+      <!-- <label for="userId">User: {{fullName}} {{userId}}</label>
+      <input type="text" formControlName="userId" value="userId" /> -->
+  
+      <label for="Id">User Name</label>
+      <select formControlName="Id" id="productId">
+        <option [value]="Id">{{ fullName }}</option>
+      </select>
+
+      <label for="productId">Product Name</label>
+      <select formControlName="productId" id="productId">
+        <option [value]="product?.productId">{{ product?.productName }}</option>
+      </select>
+  
+      <label for="text">Write your Review</label>
+      <input type="text" formControlName="text" />
+  
+      <label for="rating">Rating (Max 5)</label>
+      <input type="number" formControlName="rating" />
+  
+      <button type="submit">Submit</button>
+    </form>
+  </div>

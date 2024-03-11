@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
             summary: res.message,
             duration: 5000,
           });
-          debugger;
+          //debugger;
 
           this.router.navigate(['dashboard']);
         },
